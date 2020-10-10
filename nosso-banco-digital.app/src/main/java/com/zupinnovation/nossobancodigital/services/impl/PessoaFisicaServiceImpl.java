@@ -1,8 +1,8 @@
 package com.zupinnovation.nossobancodigital.services.impl;
 
-import com.zupinnovation.nossobancodigital.persistences.PessoaFisica;
+import com.zupinnovation.nossobancodigital.persistences.model.PessoaFisica;
 import com.zupinnovation.nossobancodigital.persistences.repositories.PessoaFisicaRepository;
-import com.zupinnovation.nossobancodigital.persistences.repositories.dto.PessoaFisicaDTO;
+import com.zupinnovation.nossobancodigital.persistences.dto.PessoaFisicaDTO;
 import com.zupinnovation.nossobancodigital.services.PessoaFisicaService;
 import com.zupinnovation.nossobancodigital.services.mappers.PessoaFisicaMapper;
 import org.springframework.stereotype.Service;
@@ -24,10 +24,18 @@ public class PessoaFisicaServiceImpl implements PessoaFisicaService {
 
     @Override
     public Boolean documentAndEmailEqual(PessoaFisicaDTO dto) {
-        Optional<PessoaFisica> verifyEmail = repository
+        Optional<PessoaFisica> verifyDocumentAndEmail = repository
                 .findByDocumentAndEmail(dto.getDocument(), dto.getEmail());
         final boolean[] equal = {false};
-        verifyEmail.ifPresent(pessoaFisica -> equal[0] = true);
+        verifyDocumentAndEmail.ifPresent(pessoaFisica -> equal[0] = true);
+        return equal[0];
+    }
+
+    @Override
+    public Boolean documentEqual(String document) {
+        Optional<PessoaFisica> verifyPessoaFisica = repository.findByDocument(document);
+        final boolean[] equal = {false};
+        verifyPessoaFisica.ifPresent(pessoaFisica -> equal[0] = true);
         return equal[0];
     }
 

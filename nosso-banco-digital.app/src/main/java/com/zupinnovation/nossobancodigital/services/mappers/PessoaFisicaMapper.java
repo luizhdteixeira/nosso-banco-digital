@@ -1,7 +1,7 @@
 package com.zupinnovation.nossobancodigital.services.mappers;
 
-import com.zupinnovation.nossobancodigital.persistences.PessoaFisica;
-import com.zupinnovation.nossobancodigital.persistences.repositories.dto.PessoaFisicaDTO;
+import com.zupinnovation.nossobancodigital.persistences.model.PessoaFisica;
+import com.zupinnovation.nossobancodigital.persistences.dto.PessoaFisicaDTO;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
