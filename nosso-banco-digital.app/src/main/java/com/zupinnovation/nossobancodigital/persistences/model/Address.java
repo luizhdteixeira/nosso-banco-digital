@@ -6,7 +6,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Entity
-public class EnderecoPessoaFisica implements Serializable {
+public class Address implements Serializable {
 
     private static final long serialVersionUID = - 596220630704722552L;
 
@@ -26,17 +26,29 @@ public class EnderecoPessoaFisica implements Serializable {
     private String city;
     @Column(nullable = false)
     private String district;
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Photography photography;
 
-    public EnderecoPessoaFisica() {
+    public Address() {
     }
 
-    public EnderecoPessoaFisica(String zipCode, String street, String neighborhoods, String addressComplement, String city, String district) {
+    public Address(String zipCode, String street, String neighborhoods, String addressComplement, String city, String district) {
         this.zipCode = zipCode;
         this.street = street;
         this.neighborhoods = neighborhoods;
         this.addressComplement = addressComplement;
         this.city = city;
         this.district = district;
+    }
+
+    public Address(String zipCode, String street, String neighborhoods, String addressComplement, String city, String district, Photography photography) {
+        this.zipCode = zipCode;
+        this.street = street;
+        this.neighborhoods = neighborhoods;
+        this.addressComplement = addressComplement;
+        this.city = city;
+        this.district = district;
+        this.photography = photography;
     }
 
     public UUID getUuid() {
@@ -95,11 +107,19 @@ public class EnderecoPessoaFisica implements Serializable {
         this.district = district;
     }
 
+    public Photography getPhotography() {
+        return photography;
+    }
+
+    public void setPhotography(Photography photography) {
+        this.photography = photography;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        EnderecoPessoaFisica that = (EnderecoPessoaFisica) o;
+        Address that = (Address) o;
         return uuid.equals(that.uuid);
     }
 

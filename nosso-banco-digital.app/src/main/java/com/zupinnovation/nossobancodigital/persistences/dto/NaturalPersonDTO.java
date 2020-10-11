@@ -6,7 +6,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 
-public class PessoaFisicaDTO {
+public class NaturalPersonDTO {
 
     @NotBlank
     private String firstName;
@@ -60,4 +60,5 @@ public class PessoaFisicaDTO {
     public void setDocument(String document) {
         this.document = document;
     }
+
 }

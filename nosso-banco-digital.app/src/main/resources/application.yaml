@@ -18,3 +18,10 @@ spring:
     properties:
       hibernate:
         show_sql: true
+
+#SSL
+server:
+  port: 8443
+  undertow:
+    accesslog:
+      enabled: true

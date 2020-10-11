@@ -3,7 +3,7 @@ package com.zupinnovation.nossobancodigital.persistences.dto;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
-public class EnderecoPessoaFisicaDTO {
+public class AddressDTO {
 
     @Pattern(regexp = ("^\\d{5}[-]\\d{3}$"))
     private String zipCode;

@@ -9,7 +9,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Entity
-public class PessoaFisica implements Serializable {
+public class NaturalPerson implements Serializable {
 
     private static final long serialVersionUID = - 414880627309498302L;
 
@@ -28,16 +28,27 @@ public class PessoaFisica implements Serializable {
     @CPF
     @Column(nullable = false, unique = true)
     private String document;
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Address address;
 
-    public PessoaFisica() {
+    public NaturalPerson() {
     }
 
-    public PessoaFisica(String firstName, String lastName, String email, LocalDate dateBirth, @CPF String document) {
+    public NaturalPerson(String firstName, String lastName, String email, LocalDate dateBirth, @CPF String document) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.dateBirth = dateBirth;
         this.document = document;
+    }
+
+    public NaturalPerson(String firstName, String lastName, String email, LocalDate dateBirth, @CPF String document, Address address) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.dateBirth = dateBirth;
+        this.document = document;
+        this.address = address;
     }
 
     public UUID getUuid() {
@@ -88,11 +99,19 @@ public class PessoaFisica implements Serializable {
         this.document = document;
     }
 
+    public Address getAddressNaturalPerson() {
+        return address;
+    }
+
+    public void setAddressNaturalPerson(Address address) {
+        this.address = address;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        PessoaFisica that = (PessoaFisica) o;
+        NaturalPerson that = (NaturalPerson) o;
         return uuid.equals(that.uuid);
     }
 
