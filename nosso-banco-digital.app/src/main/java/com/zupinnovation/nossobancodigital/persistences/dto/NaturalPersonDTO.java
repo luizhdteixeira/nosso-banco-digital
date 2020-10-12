@@ -21,6 +21,8 @@ public class NaturalPersonDTO {
     @NotBlank
     private String document;
 
+    private AddressDTO address;
+
     public String getFirstName() {
         return firstName;
     }
@@ -61,4 +63,11 @@ public class NaturalPersonDTO {
         this.document = document;
     }
 
+    public AddressDTO getAddress() {
+        return address;
+    }
+
+    public void setAddress(AddressDTO address) {
+        this.address = address;
+    }
 }

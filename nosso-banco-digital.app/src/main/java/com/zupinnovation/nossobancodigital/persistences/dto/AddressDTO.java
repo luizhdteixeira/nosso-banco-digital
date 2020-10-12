@@ -18,6 +18,8 @@ public class AddressDTO {
     @NotBlank
     private String district;
 
+    private PhotographyDTO photography;
+
     public String getZipCode() {
         return zipCode;
     }
@@ -64,5 +66,13 @@ public class AddressDTO {
 
     public void setDistrict(String district) {
         this.district = district;
+    }
+
+    public PhotographyDTO getPhotography() {
+        return photography;
+    }
+
+    public void setPhotography(PhotographyDTO photography) {
+        this.photography = photography;
     }
 }

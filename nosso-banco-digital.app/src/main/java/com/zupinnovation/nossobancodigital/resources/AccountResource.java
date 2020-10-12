@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -57,10 +58,16 @@ public class AccountResource {
     }
 
     @PostMapping(path = "/proposal/{document}/address/{uuid}/photography", consumes = "multipart/form-data", produces = "application/json")
-    public ResponseEntity<Boolean> savePhotographyNaturalPerson(@PathVariable String document, @PathVariable UUID uuid, @RequestParam MultipartFile img) {
+    public ResponseEntity<NaturalPersonDTO> savePhotographyNaturalPerson(@PathVariable String document, @PathVariable UUID uuid, @RequestParam MultipartFile img) {
         Optional<NaturalPerson> verifyExist = naturalPersonService.findByDocument(document);
         if (verifyExist.isPresent()) {
-            return new ResponseEntity<>(false, HttpStatus.CREATED);
+            NaturalPersonDTO response = null;
+            try {
+                response = naturalPersonService.savePhotographyNaturalPerson(uuid, img);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
         } else {
             return ResponseEntity.unprocessableEntity().build();
         }

@@ -9,6 +9,11 @@ public class PhotographyDTO {
     @NotBlank
     private byte[] img;
 
+    public PhotographyDTO(@NotBlank String name, @NotBlank byte[] img) {
+        this.name = name;
+        this.img = img;
+    }
+
     public String getName() {
         return name;
     }

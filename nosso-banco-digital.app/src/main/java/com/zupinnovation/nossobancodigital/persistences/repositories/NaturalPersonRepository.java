@@ -12,4 +12,5 @@ public interface NaturalPersonRepository extends JpaRepository<NaturalPerson, UU
 
     Optional<NaturalPerson> findByDocumentAndEmail(String document, String email);
     Optional<NaturalPerson> findByDocument(String document);
+    Optional<NaturalPerson> findByAddress_Uuid(UUID uuid);
 }
