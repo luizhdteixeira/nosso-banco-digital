@@ -4,17 +4,16 @@ import com.zupinnovation.nossobancodigital.persistences.dto.AddressDTO;
 import com.zupinnovation.nossobancodigital.persistences.dto.NaturalPersonDTO;
 import com.zupinnovation.nossobancodigital.persistences.model.NaturalPerson;
 import com.zupinnovation.nossobancodigital.services.NaturalPersonService;
-import org.springframework.http.HttpStatus;
+import lombok.SneakyThrows;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
-import java.io.IOException;
+import java.net.URI;
 import java.util.Optional;
 import java.util.UUID;
-
-import static java.util.Objects.isNull;
 
 @RestController
 @RequestMapping(path = "/account")
@@ -27,47 +26,55 @@ public class AccountResource {
     }
 
     @PostMapping(path = "/proposal", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<UUID> saveNaturalPerson(@RequestBody @Valid NaturalPersonDTO body) {
+    public ResponseEntity<Void> saveNaturalPerson(@RequestBody @Valid NaturalPersonDTO body) {
         Optional<NaturalPerson> verifyExist = naturalPersonService.documentAndEmailEqual(body);
-        if (verifyExist.isPresent()) {
-            NaturalPerson naturalPerson = naturalPersonService.saveNaturalPerson(body);
-            if (isNull(naturalPerson)) {
-                return ResponseEntity.badRequest().build();
+        if (!verifyExist.isPresent()) {
+            Optional<NaturalPerson> naturalPerson = naturalPersonService.saveNaturalPerson(body);
+            if (naturalPerson.isPresent()) {
+                URI location = ServletUriComponentsBuilder
+                        .fromCurrentRequest()
+                        .path("/proposal/{document}/address")
+                        .buildAndExpand(naturalPerson.get().getDocument())
+                        .toUri();
+                return ResponseEntity.created(location).build();
             }
-            return new ResponseEntity<>(naturalPerson.getUuid(), HttpStatus.CREATED);
-
-        } else {
-            return ResponseEntity.badRequest().build();
         }
+        return ResponseEntity.badRequest().build();
     }
 
     @PostMapping(path = "/proposal/{document}/address", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<UUID> saveAddressNaturalPerson(@PathVariable String document, @RequestBody @Valid AddressDTO body) {
+    public ResponseEntity<Void> saveAddressNaturalPerson(@PathVariable String document, @RequestBody @Valid AddressDTO body) {
         Optional<NaturalPerson> verifyExist = naturalPersonService.findByDocument(document);
         if (verifyExist.isPresent()) {
             UUID uuid = verifyExist.get().getUuid();
-            NaturalPerson naturalPerson = naturalPersonService.saveAddressNaturalPerson(uuid, body);
-            if (isNull(naturalPerson)) {
-                return ResponseEntity.badRequest().build();
+            Optional<NaturalPerson> naturalPerson = naturalPersonService.saveAddressNaturalPerson(uuid, body);
+            if (naturalPerson.isPresent()) {
+                URI location = ServletUriComponentsBuilder
+                        .fromCurrentRequest()
+                        .path("/proposal/{document}/address/{uuid}/photography")
+                        .buildAndExpand(naturalPerson.get().getDocument(), naturalPerson.get().getAddressNaturalPerson().getUuid())
+                        .toUri();
+                return ResponseEntity.created(location).build();
             }
-            return new ResponseEntity<>(naturalPerson.getAddressNaturalPerson().getUuid(), HttpStatus.CREATED);
-        } else {
-            return ResponseEntity.badRequest().build();
         }
-
+        return ResponseEntity.badRequest().build();
     }
 
+    @SneakyThrows
     @PostMapping(path = "/proposal/{document}/address/{uuid}/photography", consumes = "multipart/form-data", produces = "application/json")
-    public ResponseEntity<NaturalPersonDTO> savePhotographyNaturalPerson(@PathVariable String document, @PathVariable UUID uuid, @RequestParam MultipartFile img) {
+    public ResponseEntity<Void> savePhotographyNaturalPerson(@PathVariable String document, @PathVariable UUID uuid, @RequestParam MultipartFile img) {
         Optional<NaturalPerson> verifyExist = naturalPersonService.findByDocument(document);
         if (verifyExist.isPresent()) {
-            NaturalPersonDTO response = null;
-            try {
-                response = naturalPersonService.savePhotographyNaturalPerson(uuid, img);
-            } catch (IOException e) {
-                e.printStackTrace();
+            Optional<NaturalPersonDTO> naturalPerson = naturalPersonService.savePhotographyNaturalPerson(uuid, img);
+            if (naturalPerson.isPresent()) {
+                URI location = ServletUriComponentsBuilder
+                        .fromCurrentRequest()
+                        .path("/receive")
+                        .buildAndExpand(naturalPerson.get())
+                        .toUri();
+                return ResponseEntity.created(location).build();
             }
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
+            return ResponseEntity.badRequest().build();
         } else {
             return ResponseEntity.unprocessableEntity().build();
         }

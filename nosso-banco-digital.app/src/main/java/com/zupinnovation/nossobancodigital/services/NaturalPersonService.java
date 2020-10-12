@@ -13,8 +13,8 @@ public interface NaturalPersonService {
 
     Optional<NaturalPerson> documentAndEmailEqual(NaturalPersonDTO dto);
     Optional<NaturalPerson> findByDocument(String document);
-    NaturalPerson saveNaturalPerson(NaturalPersonDTO dto);
-    NaturalPerson saveAddressNaturalPerson(UUID uuid, AddressDTO dto);
-    NaturalPersonDTO savePhotographyNaturalPerson(UUID uuid, MultipartFile multipartFile) throws IOException;
+    Optional<NaturalPerson> saveNaturalPerson(NaturalPersonDTO dto);
+    Optional<NaturalPerson> saveAddressNaturalPerson(UUID uuid, AddressDTO dto);
+    Optional<NaturalPersonDTO> savePhotographyNaturalPerson(UUID uuid, MultipartFile multipartFile) throws IOException;
 
 }

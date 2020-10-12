@@ -47,43 +47,42 @@ public class NaturalPersonServiceImpl implements NaturalPersonService {
     }
 
     @Override
-    public NaturalPerson saveNaturalPerson(NaturalPersonDTO dto) {
-        NaturalPerson entity = naturalPersonMapper.dtoToEntityNaturalPerson(dto);
-        if (nonNull(entity)) {
-            return repository.save(entity);
+    public Optional<NaturalPerson> saveNaturalPerson(NaturalPersonDTO dto) {
+        if (nonNull(dto)) {
+            NaturalPerson entity = naturalPersonMapper.dtoToEntityNaturalPerson(dto);
+            return Optional.of(repository.save(entity));
         }
-        return null;
+        return Optional.empty();
     }
 
     @Override
-    public NaturalPerson saveAddressNaturalPerson(UUID uuid, AddressDTO dto) {
+    public Optional<NaturalPerson> saveAddressNaturalPerson(UUID uuid, AddressDTO dto) {
         if (StringUtils.isEmpty(uuid.toString()) || isNull(dto)) {
-            return null;
+            return Optional.empty();
+        } else {
+            Optional<NaturalPerson> optionalNaturalPerson = repository.findById(uuid);
+            optionalNaturalPerson.ifPresent(naturalPerson -> {
+                naturalPerson.setAddressNaturalPerson(addressMapper.dtoToEntity(dto));
+                repository.save(naturalPerson);
+            });
+            return optionalNaturalPerson;
         }
-        Optional<NaturalPerson> queryNaturalPerson = repository.findById(uuid);
-        if (queryNaturalPerson.isPresent()) {
-            NaturalPerson naturalPerson = queryNaturalPerson.get();
-            naturalPerson.setAddressNaturalPerson(addressMapper.dtoToEntity(dto));
-            repository.save(naturalPerson);
-            return naturalPerson;
-        }
-        return null;
+
     }
 
     @Override
-    public NaturalPersonDTO savePhotographyNaturalPerson(UUID uuid, MultipartFile multipartFile) throws IOException {
+    public Optional<NaturalPersonDTO> savePhotographyNaturalPerson(UUID uuid, MultipartFile multipartFile) throws IOException {
         if (StringUtils.isEmpty(uuid.toString()) || isNull(multipartFile)) {
-            return null;
-        }
-        Optional<NaturalPerson> queryAddressNaturalPerson = repository.findByAddress_Uuid(uuid);
-        if (queryAddressNaturalPerson.isPresent()) {
-            NaturalPerson naturalPerson = queryAddressNaturalPerson.get();
+            return Optional.empty();
+        } else {
+            Optional<NaturalPerson> optionalNaturalPerson = repository.findByAddress_Uuid(uuid);
             PhotographyDTO photographyDTO = new PhotographyDTO(multipartFile.getName(), multipartFile.getBytes());
-            naturalPerson.getAddressNaturalPerson().setPhotography(photographyMapper.dtoToEntityPhotography(photographyDTO));
-            repository.save(naturalPerson);
-            return naturalPersonMapper.entityToDtoNaturalPerson(naturalPerson);
+            optionalNaturalPerson.ifPresent(naturalPerson -> {
+                naturalPerson.getAddressNaturalPerson().setPhotography(photographyMapper.dtoToEntityPhotography(photographyDTO));
+                repository.save(naturalPerson);
+            });
+            return optionalNaturalPerson.map(naturalPersonMapper::entityToDtoNaturalPerson);
         }
-        return null;
     }
 
 }
