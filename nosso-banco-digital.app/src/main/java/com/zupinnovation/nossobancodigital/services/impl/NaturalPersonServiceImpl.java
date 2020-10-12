@@ -1,10 +1,10 @@
 package com.zupinnovation.nossobancodigital.services.impl;
 
 import com.zupinnovation.nossobancodigital.persistences.dto.AddressDTO;
+import com.zupinnovation.nossobancodigital.persistences.dto.NaturalPersonDTO;
 import com.zupinnovation.nossobancodigital.persistences.dto.PhotographyDTO;
 import com.zupinnovation.nossobancodigital.persistences.model.NaturalPerson;
 import com.zupinnovation.nossobancodigital.persistences.repositories.NaturalPersonRepository;
-import com.zupinnovation.nossobancodigital.persistences.dto.NaturalPersonDTO;
 import com.zupinnovation.nossobancodigital.services.NaturalPersonService;
 import com.zupinnovation.nossobancodigital.services.mappers.AddressMapper;
 import com.zupinnovation.nossobancodigital.services.mappers.NaturalPersonMapper;

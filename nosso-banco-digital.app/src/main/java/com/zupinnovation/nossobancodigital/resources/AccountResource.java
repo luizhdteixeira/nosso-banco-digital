@@ -4,13 +4,13 @@ import com.zupinnovation.nossobancodigital.persistences.dto.AddressDTO;
 import com.zupinnovation.nossobancodigital.persistences.dto.NaturalPersonDTO;
 import com.zupinnovation.nossobancodigital.persistences.model.NaturalPerson;
 import com.zupinnovation.nossobancodigital.services.NaturalPersonService;
-import lombok.SneakyThrows;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.net.URI;
 import java.util.Optional;
 import java.util.UUID;
@@ -60,9 +60,8 @@ public class AccountResource {
         return ResponseEntity.badRequest().build();
     }
 
-    @SneakyThrows
     @PostMapping(path = "/proposal/{document}/address/{uuid}/photography", consumes = "multipart/form-data", produces = "application/json")
-    public ResponseEntity<Void> savePhotographyNaturalPerson(@PathVariable String document, @PathVariable UUID uuid, @RequestParam MultipartFile img) {
+    public ResponseEntity<Void> savePhotographyNaturalPerson(@PathVariable String document, @PathVariable UUID uuid, @RequestParam MultipartFile img) throws IOException {
         Optional<NaturalPerson> verifyExist = naturalPersonService.findByDocument(document);
         if (verifyExist.isPresent()) {
             Optional<NaturalPersonDTO> naturalPerson = naturalPersonService.savePhotographyNaturalPerson(uuid, img);
