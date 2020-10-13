@@ -6,7 +6,8 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 
-public class NaturalPersonDTO {
+public class NaturalPersonReceiveDTO {
+
     @NotBlank
     private String firstName;
     @NotBlank
@@ -18,6 +19,8 @@ public class NaturalPersonDTO {
     private LocalDate dateBirth;
     @NotBlank
     private String document;
+
+    private AddressDTO address;
 
     public String getFirstName() {
         return firstName;
@@ -57,5 +60,13 @@ public class NaturalPersonDTO {
 
     public void setDocument(String document) {
         this.document = document;
+    }
+
+    public AddressDTO getAddress() {
+        return address;
+    }
+
+    public void setAddress(AddressDTO address) {
+        this.address = address;
     }
 }

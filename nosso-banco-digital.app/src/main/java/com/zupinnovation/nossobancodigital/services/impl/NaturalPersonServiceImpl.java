@@ -2,6 +2,7 @@ package com.zupinnovation.nossobancodigital.services.impl;
 
 import com.zupinnovation.nossobancodigital.persistences.dto.AddressDTO;
 import com.zupinnovation.nossobancodigital.persistences.dto.NaturalPersonDTO;
+import com.zupinnovation.nossobancodigital.persistences.dto.NaturalPersonReceiveDTO;
 import com.zupinnovation.nossobancodigital.persistences.dto.PhotographyDTO;
 import com.zupinnovation.nossobancodigital.persistences.model.NaturalPerson;
 import com.zupinnovation.nossobancodigital.persistences.repositories.NaturalPersonRepository;
@@ -10,12 +11,10 @@ import com.zupinnovation.nossobancodigital.services.mappers.AddressMapper;
 import com.zupinnovation.nossobancodigital.services.mappers.NaturalPersonMapper;
 import com.zupinnovation.nossobancodigital.services.mappers.PhotographyMapper;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Optional;
-import java.util.UUID;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -56,13 +55,13 @@ public class NaturalPersonServiceImpl implements NaturalPersonService {
     }
 
     @Override
-    public Optional<NaturalPerson> saveAddressNaturalPerson(UUID uuid, AddressDTO dto) {
-        if (StringUtils.isEmpty(uuid.toString()) || isNull(dto)) {
+    public Optional<NaturalPerson> saveAddressNaturalPerson(Long id, AddressDTO dto) {
+        if (isNull(id) || isNull(dto)) {
             return Optional.empty();
         } else {
-            Optional<NaturalPerson> optionalNaturalPerson = repository.findById(uuid);
+            Optional<NaturalPerson> optionalNaturalPerson = repository.findById(id);
             optionalNaturalPerson.ifPresent(naturalPerson -> {
-                naturalPerson.setAddressNaturalPerson(addressMapper.dtoToEntity(dto));
+                naturalPerson.setAddress(addressMapper.dtoToEntity(dto));
                 repository.save(naturalPerson);
             });
             return optionalNaturalPerson;
@@ -71,17 +70,17 @@ public class NaturalPersonServiceImpl implements NaturalPersonService {
     }
 
     @Override
-    public Optional<NaturalPersonDTO> savePhotographyNaturalPerson(UUID uuid, MultipartFile multipartFile) throws IOException {
-        if (StringUtils.isEmpty(uuid.toString()) || isNull(multipartFile)) {
+    public Optional<NaturalPersonReceiveDTO> savePhotographyNaturalPerson(Long id, MultipartFile multipartFile) throws IOException {
+        if (isNull(id)|| isNull(multipartFile)) {
             return Optional.empty();
         } else {
-            Optional<NaturalPerson> optionalNaturalPerson = repository.findByAddress_Uuid(uuid);
+            Optional<NaturalPerson> optionalNaturalPerson = repository.findByAddressUUID(id);
             PhotographyDTO photographyDTO = new PhotographyDTO(multipartFile.getName(), multipartFile.getBytes());
             optionalNaturalPerson.ifPresent(naturalPerson -> {
-                naturalPerson.getAddressNaturalPerson().setPhotography(photographyMapper.dtoToEntityPhotography(photographyDTO));
+                naturalPerson.getAddress().setPhotography(photographyMapper.dtoToEntityPhotography(photographyDTO));
                 repository.save(naturalPerson);
             });
-            return optionalNaturalPerson.map(naturalPersonMapper::entityToDtoNaturalPerson);
+            return optionalNaturalPerson.map(naturalPersonMapper::entityToDtoNaturalPersonReceive);
         }
     }
 

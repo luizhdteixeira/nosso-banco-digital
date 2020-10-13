@@ -2,7 +2,7 @@ package com.zupinnovation.nossobancodigital.persistences.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.UUID;
+import java.util.Objects;
 
 @Entity
 public class Photography implements Serializable {
@@ -12,7 +12,7 @@ public class Photography implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, unique = true)
-    private UUID uuid;
+    private Long id;
 
     @Column(nullable = false)
     private String name;
@@ -28,12 +28,12 @@ public class Photography implements Serializable {
         this.img = img;
     }
 
-    public UUID getUuid() {
-        return uuid;
+    public Long getId() {
+        return id;
     }
 
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -50,5 +50,18 @@ public class Photography implements Serializable {
 
     public void setImg(byte[] img) {
         this.img = img;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Photography that = (Photography) o;
+        return id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

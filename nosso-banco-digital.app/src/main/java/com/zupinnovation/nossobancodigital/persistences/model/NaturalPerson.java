@@ -6,7 +6,6 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
-import java.util.UUID;
 
 @Entity
 public class NaturalPerson implements Serializable {
@@ -16,7 +15,7 @@ public class NaturalPerson implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, unique = true)
-    private UUID uuid;
+    private Long id;
     @Column(nullable = false)
     private String firstName;
     @Column(nullable = false)
@@ -51,12 +50,12 @@ public class NaturalPerson implements Serializable {
         this.address = address;
     }
 
-    public UUID getUuid() {
-        return uuid;
+    public Long getId() {
+        return id;
     }
 
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getFirstName() {
@@ -99,11 +98,11 @@ public class NaturalPerson implements Serializable {
         this.document = document;
     }
 
-    public Address getAddressNaturalPerson() {
+    public Address getAddress() {
         return address;
     }
 
-    public void setAddressNaturalPerson(Address address) {
+    public void setAddress(Address address) {
         this.address = address;
     }
 
@@ -112,11 +111,11 @@ public class NaturalPerson implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         NaturalPerson that = (NaturalPerson) o;
-        return uuid.equals(that.uuid);
+        return id.equals(that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid);
+        return Objects.hash(id);
     }
 }

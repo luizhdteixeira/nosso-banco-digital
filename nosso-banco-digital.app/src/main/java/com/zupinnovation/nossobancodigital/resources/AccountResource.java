@@ -2,6 +2,7 @@ package com.zupinnovation.nossobancodigital.resources;
 
 import com.zupinnovation.nossobancodigital.persistences.dto.AddressDTO;
 import com.zupinnovation.nossobancodigital.persistences.dto.NaturalPersonDTO;
+import com.zupinnovation.nossobancodigital.persistences.dto.NaturalPersonReceiveDTO;
 import com.zupinnovation.nossobancodigital.persistences.model.NaturalPerson;
 import com.zupinnovation.nossobancodigital.services.NaturalPersonService;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +14,6 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Optional;
-import java.util.UUID;
 
 @RestController
 @RequestMapping(path = "/account")
@@ -46,13 +46,12 @@ public class AccountResource {
     public ResponseEntity<Void> saveAddressNaturalPerson(@PathVariable String document, @RequestBody @Valid AddressDTO body) {
         Optional<NaturalPerson> verifyExist = naturalPersonService.findByDocument(document);
         if (verifyExist.isPresent()) {
-            UUID uuid = verifyExist.get().getUuid();
-            Optional<NaturalPerson> naturalPerson = naturalPersonService.saveAddressNaturalPerson(uuid, body);
+            Optional<NaturalPerson> naturalPerson = naturalPersonService.saveAddressNaturalPerson(verifyExist.get().getId(), body);
             if (naturalPerson.isPresent()) {
                 URI location = ServletUriComponentsBuilder
                         .fromCurrentRequest()
-                        .path("/proposal/{document}/address/{uuid}/photography")
-                        .buildAndExpand(naturalPerson.get().getDocument(), naturalPerson.get().getAddressNaturalPerson().getUuid())
+                        .path("/proposal/{document}/address/{id}/photography")
+                        .buildAndExpand(naturalPerson.get().getDocument(), naturalPerson.get().getAddress().getId())
                         .toUri();
                 return ResponseEntity.created(location).build();
             }
@@ -60,11 +59,11 @@ public class AccountResource {
         return ResponseEntity.badRequest().build();
     }
 
-    @PostMapping(path = "/proposal/{document}/address/{uuid}/photography", consumes = "multipart/form-data", produces = "application/json")
-    public ResponseEntity<Void> savePhotographyNaturalPerson(@PathVariable String document, @PathVariable UUID uuid, @RequestParam MultipartFile img) throws IOException {
+    @PostMapping(path = "/proposal/{document}/address/{id}/photography", consumes = "multipart/form-data", produces = "application/json")
+    public ResponseEntity<Void> savePhotographyNaturalPerson(@PathVariable String document, @PathVariable Long id, @RequestParam MultipartFile img) throws IOException {
         Optional<NaturalPerson> verifyExist = naturalPersonService.findByDocument(document);
         if (verifyExist.isPresent()) {
-            Optional<NaturalPersonDTO> naturalPerson = naturalPersonService.savePhotographyNaturalPerson(uuid, img);
+            Optional<NaturalPersonReceiveDTO> naturalPerson = naturalPersonService.savePhotographyNaturalPerson(id, img);
             if (naturalPerson.isPresent()) {
                 URI location = ServletUriComponentsBuilder
                         .fromCurrentRequest()
