@@ -1,5 +1,8 @@
 package com.zupinnovation.nossobancodigital.persistences.model;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
@@ -25,7 +28,8 @@ public class Address implements Serializable {
     private String city;
     @Column(nullable = false)
     private String district;
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @Fetch(FetchMode.JOIN)
     private Photography photography;
 
     public Address() {

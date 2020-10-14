@@ -50,8 +50,8 @@ public class AccountResource {
             if (naturalPerson.isPresent()) {
                 URI location = ServletUriComponentsBuilder
                         .fromCurrentRequest()
-                        .path("/proposal/{document}/address/{id}/photography")
-                        .buildAndExpand(naturalPerson.get().getDocument(), naturalPerson.get().getAddress().getId())
+                        .path("/{id}/photography")
+                        .buildAndExpand(naturalPerson.get().getAddress().getId())
                         .toUri();
                 return ResponseEntity.created(location).build();
             }

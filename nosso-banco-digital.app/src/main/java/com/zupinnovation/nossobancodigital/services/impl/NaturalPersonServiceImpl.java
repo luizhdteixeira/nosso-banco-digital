@@ -74,7 +74,7 @@ public class NaturalPersonServiceImpl implements NaturalPersonService {
         if (isNull(id)|| isNull(multipartFile)) {
             return Optional.empty();
         } else {
-            Optional<NaturalPerson> optionalNaturalPerson = repository.findByAddressUUID(id);
+            Optional<NaturalPerson> optionalNaturalPerson = repository.findByAddress_Id(id);
             PhotographyDTO photographyDTO = new PhotographyDTO(multipartFile.getName(), multipartFile.getBytes());
             optionalNaturalPerson.ifPresent(naturalPerson -> {
                 naturalPerson.getAddress().setPhotography(photographyMapper.dtoToEntityPhotography(photographyDTO));

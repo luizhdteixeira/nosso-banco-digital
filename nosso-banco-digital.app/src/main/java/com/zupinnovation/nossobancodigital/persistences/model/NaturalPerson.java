@@ -1,5 +1,7 @@
 package com.zupinnovation.nossobancodigital.persistences.model;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.validator.constraints.br.CPF;
 
 import javax.persistence.*;
@@ -27,7 +29,8 @@ public class NaturalPerson implements Serializable {
     @CPF
     @Column(nullable = false, unique = true)
     private String document;
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @Fetch(FetchMode.JOIN)
     private Address address;
 
     public NaturalPerson() {
